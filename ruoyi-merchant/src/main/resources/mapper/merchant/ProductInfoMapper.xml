@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.ProductInfoMapper">
+
+    <resultMap type="ProductInfo" id="ProductInfoResult">
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productPrice"    column="product_price"    />
+        <result property="productStock"    column="product_stock"    />
+        <result property="productDescription"    column="product_description"    />
+        <result property="productIcon"    column="product_icon"    />
+        <result property="productStatus"    column="product_status"    />
+        <result property="categoryType"    column="category_type"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectProductInfoVo">
+        select product_id, product_name, product_price, product_stock, product_description, product_icon, product_status, category_type, seller_id, create_time, update_time from product_info
+    </sql>
+
+    <select id="selectProductInfoList" parameterType="ProductInfo" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        <where>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="productPrice != null "> and product_price = #{productPrice}</if>
+            <if test="productStock != null "> and product_stock = #{productStock}</if>
+            <if test="productDescription != null  and productDescription != ''"> and product_description = #{productDescription}</if>
+            <if test="productIcon != null  and productIcon != ''"> and product_icon = #{productIcon}</if>
+            <if test="productStatus != null  and productStatus != ''"> and product_status = #{productStatus}</if>
+            <if test="categoryType != null "> and category_type = #{categoryType}</if>
+        </where>
+    </select>
+
+    <select id="selectProductInfoById" parameterType="String" resultMap="ProductInfoResult">
+        <include refid="selectProductInfoVo"/>
+        where product_id = #{productId}
+    </select>
+    <select id="checkProductAllowed" resultType="java.lang.Integer">
+        select count(1) from product_info
+        where product_id=#{productId} and seller_id = #{sellerId} and product_status='0'
+    </select>
+
+    <insert id="insertProductInfo" parameterType="ProductInfo" useGeneratedKeys="true" keyProperty="productId">
+        insert into product_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null and productName != ''">product_name,</if>
+            <if test="productPrice != null">product_price,</if>
+            <if test="productStock != null">product_stock,</if>
+            <if test="productDescription != null">product_description,</if>
+            <if test="productIcon != null">product_icon,</if>
+            <if test="productStatus != null">product_status,</if>
+            <if test="categoryType != null">category_type,</if>
+            <if test="sellerId != null">seller_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productName != null and productName != ''">#{productName},</if>
+            <if test="productPrice != null">#{productPrice},</if>
+            <if test="productStock != null">#{productStock},</if>
+            <if test="productDescription != null">#{productDescription},</if>
+            <if test="productIcon != null">#{productIcon},</if>
+            <if test="productStatus != null">#{productStatus},</if>
+            <if test="categoryType != null">#{categoryType},</if>
+            <if test="sellerId != null">#{sellerId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProductInfo" parameterType="ProductInfo">
+        update product_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productName != null and productName != ''">product_name = #{productName},</if>
+            <if test="productPrice != null">product_price = #{productPrice},</if>
+            <if test="productStock != null">product_stock = #{productStock},</if>
+            <if test="productDescription != null">product_description = #{productDescription},</if>
+            <if test="productIcon != null">product_icon = #{productIcon},</if>
+            <if test="productStatus != null">product_status = #{productStatus},</if>
+            <if test="categoryType != null">category_type = #{categoryType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteProductInfoById" parameterType="String">
+        delete from product_info where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProductInfoByIds" parameterType="String">
+        delete from product_info where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+</mapper>
