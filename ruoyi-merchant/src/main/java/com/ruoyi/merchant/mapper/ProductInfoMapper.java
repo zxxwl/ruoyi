@@ -59,11 +59,4 @@ public interface ProductInfoMapper
      */
     public int deleteProductInfoByIds(String[] productIds);
 
-    /**
-     * 查询是否有操作权限
-     * @param productInfo
-     * @return
-     */
-    int checkProductAllowed(ProductInfo productInfo);
-
 }

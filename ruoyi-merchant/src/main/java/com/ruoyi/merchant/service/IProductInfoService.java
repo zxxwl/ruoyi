@@ -60,12 +60,6 @@ public interface IProductInfoService
     public int deleteProductInfoById(String productId);
 
     /**
-     * 校验是否允许操作
-     * @param productInfo
-     */
-    void checkProductAllowed(ProductInfo productInfo);
-
-    /**
      * 修改商品状态
      * @param productInfo
      * @return

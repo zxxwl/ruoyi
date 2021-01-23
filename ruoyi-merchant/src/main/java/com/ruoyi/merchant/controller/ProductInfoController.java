@@ -52,6 +52,8 @@ public class ProductInfoController extends BaseController
     public TableDataInfo list(ProductInfo productInfo)
     {
         startPage();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        productInfo.setSellerId(loginUser.getUser().getUserId());
         List<ProductInfo> list = productInfoService.selectProductInfoList(productInfo);
         return getDataTable(list);
     }
@@ -102,9 +104,6 @@ public class ProductInfoController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ProductInfo productInfo)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        productInfo.setSellerId(loginUser.getUser().getUserId());
-        productInfoService.checkProductAllowed(productInfo);
         return toAjax(productInfoService.updateProductInfo(productInfo));
     }
 
@@ -116,9 +115,6 @@ public class ProductInfoController extends BaseController
     @PutMapping("/changeProductStatus")
     public AjaxResult changeProductStatus(@RequestBody ProductInfo productInfo)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        productInfo.setSellerId(loginUser.getUser().getUserId());
-        productInfoService.checkProductAllowed(productInfo);
         return toAjax(productInfoService.changeProductStatus(productInfo));
     }
 

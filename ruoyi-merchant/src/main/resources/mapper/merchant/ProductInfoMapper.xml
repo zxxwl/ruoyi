@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectProductInfoList" parameterType="ProductInfo" resultMap="ProductInfoResult">
         <include refid="selectProductInfoVo"/>
-        <where>
+        <where> del_flag='0' and seller_id=#{sellerId}
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
             <if test="productPrice != null "> and product_price = #{productPrice}</if>
             <if test="productStock != null "> and product_stock = #{productStock}</if>
@@ -38,10 +38,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectProductInfoById" parameterType="String" resultMap="ProductInfoResult">
         <include refid="selectProductInfoVo"/>
         where product_id = #{productId}
-    </select>
-    <select id="checkProductAllowed" resultType="java.lang.Integer">
-        select count(1) from product_info
-        where product_id=#{productId} and seller_id = #{sellerId} and product_status='0'
     </select>
 
     <insert id="insertProductInfo" parameterType="ProductInfo" useGeneratedKeys="true" keyProperty="productId">

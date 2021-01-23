@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectProductCategoryList" parameterType="ProductCategory" resultMap="ProductCategoryResult">
         <include refid="selectProductCategoryVo"/>
         <where>
-            del_flag='0'
+            del_flag='0' and seller_id=#{sellerId}
             <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
             <if test="categoryType != null "> and category_type = #{categoryType}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
@@ -41,10 +41,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectProductCategoryById" parameterType="Long" resultMap="ProductCategoryResult">
         <include refid="selectProductCategoryVo"/>
         where category_id = #{categoryId}
-    </select>
-    <select id="checkCategoryAllowed" resultType="java.lang.Integer">
-        select count(1) from product_category
-        where category_id=#{categoryId} and seller_id = #{sellerId} and del_flag='0'
     </select>
 
     <insert id="insertProductCategory" parameterType="ProductCategory" useGeneratedKeys="true" keyProperty="categoryId">

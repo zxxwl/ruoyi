@@ -58,11 +58,4 @@ public interface ProductCategoryMapper
      * @return 结果
      */
     public int deleteProductCategoryByIds(Long[] categoryIds);
-
-    /**
-     * 通过当前用户查询是否有权限修改状态
-     * @param productCategory
-     * @return
-     */
-    int checkCategoryAllowed(ProductCategory productCategory);
 }

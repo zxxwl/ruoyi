@@ -96,18 +96,6 @@ public class ProductCategoryServiceImpl implements IProductCategoryService
         return productCategoryMapper.deleteProductCategoryById(categoryId);
     }
 
-    /**
-     * 查询类目信息是否有权限修改
-     * @param productCategory 类目信息
-     */
-    @Override
-    public void checkCategoryAllowed(ProductCategory productCategory) {
-        int result=productCategoryMapper.checkCategoryAllowed(productCategory);
-        if (result<=0){
-            throw new CustomException("不允许操作非权限数据");
-        }
-    }
-
     @Override
     public int updateCategoryStatus(ProductCategory productCategory) {
         return productCategoryMapper.updateProductCategory(productCategory);

@@ -62,13 +62,6 @@ public interface IProductCategoryService
     public int deleteProductCategoryById(Long categoryId);
 
     /**
-     * 校验角色是否允许操作
-     *
-     * @param productCategory 类目信息
-     */
-    void checkCategoryAllowed(ProductCategory productCategory);
-
-    /**
      * 修改类目状态
      *
      * @param productCategory 类目信息

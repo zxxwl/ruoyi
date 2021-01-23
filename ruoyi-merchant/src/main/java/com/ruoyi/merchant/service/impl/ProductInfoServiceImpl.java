@@ -97,18 +97,6 @@ public class ProductInfoServiceImpl implements IProductInfoService
     }
 
     /**
-     * 检验用户是否有权限操作
-     * @param productInfo
-     */
-    @Override
-    public void checkProductAllowed(ProductInfo productInfo) {
-        int result=productInfoMapper.checkProductAllowed(productInfo);
-        if (result<=0){
-            throw new CustomException("不允许操作非权限数据");
-        }
-    }
-
-    /**
      * 修改商品状态
      * @param productInfo
      * @return

@@ -99,9 +99,6 @@ public class ProductCategoryController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody ProductCategory productCategory)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        productCategory.setSellerId(loginUser.getUser().getUserId());
-        productCategoryService.checkCategoryAllowed(productCategory);
         return toAjax(productCategoryService.updateProductCategory(productCategory));
     }
 
@@ -113,9 +110,6 @@ public class ProductCategoryController extends BaseController
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody ProductCategory productCategory)
     {
-        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        productCategory.setSellerId(loginUser.getUser().getUserId());
-        productCategoryService.checkCategoryAllowed(productCategory);
         return toAjax(productCategoryService.updateCategoryStatus(productCategory));
     }
 
