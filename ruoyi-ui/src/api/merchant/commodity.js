@@ -35,13 +35,13 @@ export function updateInfo(data) {
   })
 }
 // 修改商品状态
-export function changeProductStatus(productId, status) {
+export function changeProductStatus(productId, productStatus) {
   const data = {
     productId,
-    status
+    productStatus
   }
   return request({
-    url: '/merchant/commodity/changeStatus',
+    url: '/merchant/commodity/changeProductStatus',
     method: 'put',
     data: data
   })

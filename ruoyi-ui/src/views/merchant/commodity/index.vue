@@ -177,11 +177,11 @@
             :action=uploadFileUrl
             class="avatar-uploader"
             :show-file-list="false"
-            :auto-upload="false"
+            :auto-upload="true"
             :headers="headers"
+            :on-success="handleUploadSuccess"
             :on-error="handleUploadError"
             :before-upload="handleBeforeUpload"
-            :on-change="changeUpload"
           >
             <img v-if="dialogImageUrl" :src="dialogImageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -375,6 +375,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.form.productIcon=this.dialogImageUrl;
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.productId != null) {
@@ -422,7 +423,7 @@ export default {
     },
     // 商品状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
+      let text = row.productStatus === "0" ? "启用" : "停用";
       this.$confirm('确认要"' + text + '""' + row.productName + '"类目吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -479,6 +480,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       this.$message.success("上传成功");
+      this.dialogImageUrl=res.url;
       this.$emit("input", res.url);
     },
   }
