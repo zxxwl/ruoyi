@@ -5,9 +5,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 类目对象 product_category
- * 
+ *
  * @author ztt
  * @date 2021-01-21
  */
@@ -34,62 +36,54 @@ public class ProductCategory extends BaseEntity
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    /** 删除标志（0代表存在 2代表删除） */
-    private String delFlag;
+    private List<ProductInfo> productInfos;
 
-    public void setCategoryId(Long categoryId) 
-    {
+    public List<ProductInfo> getProductInfos() {
+        return productInfos;
+    }
+
+    public void setProductInfos(List<ProductInfo> productInfos) {
+        this.productInfos = productInfos;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
 
-    public Long getCategoryId() 
-    {
-        return categoryId;
+    public String getCategoryName() {
+        return categoryName;
     }
-    public void setCategoryName(String categoryName) 
-    {
+
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
-    public String getCategoryName() 
-    {
-        return categoryName;
+    public Long getCategoryType() {
+        return categoryType;
     }
-    public void setCategoryType(Long categoryType) 
-    {
+
+    public void setCategoryType(Long categoryType) {
         this.categoryType = categoryType;
     }
 
-    public Long getCategoryType() 
-    {
-        return categoryType;
+    public Long getSellerId() {
+        return sellerId;
     }
-    public void setSellerId(Long sellerId) 
-    {
+
+    public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
     }
 
-    public Long getSellerId() 
-    {
-        return sellerId;
-    }
-    public void setStatus(String status) 
-    {
-        this.status = status;
-    }
-
-    public String getStatus() 
-    {
+    public String getStatus() {
         return status;
     }
-    public void setDelFlag(String delFlag) 
-    {
-        this.delFlag = delFlag;
-    }
 
-    public String getDelFlag() 
-    {
-        return delFlag;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -102,7 +96,6 @@ public class ProductCategory extends BaseEntity
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
             .append("status", getStatus())
-            .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
             .append("remark", getRemark())
             .toString();

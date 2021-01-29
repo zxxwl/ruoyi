@@ -12,21 +12,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
         <result property="status"    column="status"    />
-        <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectProductCategoryVo">
-        select category_id, category_name, category_type, create_time, update_time, status, del_flag, create_by, remark from product_category
+        select category_id, category_name, category_type, create_time, update_time, status, create_by, remark from product_category
     </sql>
 
     <select id="selectProductCategoryList" parameterType="ProductCategory" resultMap="ProductCategoryResult">
         <include refid="selectProductCategoryVo"/>
         <where>
-            del_flag='0' and seller_id=#{sellerId}
             <if test="categoryName != null  and categoryName != ''"> and category_name like concat('%', #{categoryName}, '%')</if>
             <if test="categoryType != null "> and category_type = #{categoryType}</if>
+            <if test="sellerId != null"> and seller_id = #{sellerId} </if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
@@ -34,8 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
                 and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
-            order by create_time desc
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectProductCategoryById" parameterType="Long" resultMap="ProductCategoryResult">
@@ -52,7 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="status != null">status,</if>
-            <if test="delFlag != null">del_flag,</if>
             <if test="createBy != null">create_by,</if>
             <if test="remark != null">remark,</if>
          </trim>
@@ -63,7 +61,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="status != null">#{status},</if>
-            <if test="delFlag != null">#{delFlag},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="remark != null">#{remark},</if>
          </trim>
@@ -77,7 +74,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>

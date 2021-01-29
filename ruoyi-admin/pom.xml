@@ -77,6 +77,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-merchant</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-buyer</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

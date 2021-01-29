@@ -1,58 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="商品名称" prop="productName">
+      <el-form-item label="图片描述" prop="picMessage">
         <el-input
-          v-model="queryParams.productName"
-          placeholder="请输入商品名称"
+          v-model="queryParams.picMessage"
+          placeholder="请输入图片描述"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="单价" prop="productPrice">
-        <el-input
-          v-model="queryParams.productPrice"
-          placeholder="请输入单价"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="库存" prop="productStock">
-        <el-input
-          v-model="queryParams.productStock"
-          placeholder="请输入库存"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="商品状态" prop="productStatus">
-        <el-select
-          v-model="queryParams.productStatus"
-          placeholder="类目状态"
-          clearable
-          size="small"
-          style="width: 240px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="类目编号" prop="categoryType">
-        <el-select v-model="form.categoryType" placeholder="请选择类目编号">
-          <el-option
-            v-for="item in categoryList"
-            :key="item.categoryType"
-            :label="item.categoryName"
-            :value="item.categoryType">
-          </el-option>
-        </el-select>
+      <el-form-item label="创建时间" prop="picCreate">
+        <el-date-picker clearable size="small"
+          v-model="queryParams.picCreate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="选择创建时间">
+        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -68,7 +32,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['merchant:commodity:add']"
+          v-hasPermi="['merchant:picture:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,7 +43,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['merchant:commodity:edit']"
+          v-hasPermi="['merchant:picture:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +54,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['merchant:commodity:remove']"
+          v-hasPermi="['merchant:picture:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -100,35 +64,25 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['merchant:commodity:export']"
+          v-hasPermi="['merchant:picture:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="merchantList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="参数主键" align="center" prop="productId" />
-      <el-table-column label="商品名称" align="center" prop="productName" />
-      <el-table-column label="单价" align="center" prop="productPrice" />
-      <el-table-column label="库存" align="center" prop="productStock" />
-      <el-table-column label="描述" align="center" prop="productDescription" />
-      <el-table-column label="小图" align="center" prop="productIcon">
+      <el-table-column label="图片" align="center" prop="picUrl">
         <template slot-scope="scope">
-          <img :src="scope.row.productIcon" width="100" height="100">
+          <img :src="scope.row.picUrl" width="80" height="80">
         </template>
       </el-table-column>
-      <el-table-column label="商品状态" align="center" prop="productStatus">
+      <el-table-column label="图片描述" align="center" prop="picMessage" />
+      <el-table-column label="创建时间" align="center" prop="picCreate" width="180">
         <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.productStatus"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-          ></el-switch>
+          <span>{{ parseTime(scope.row.picCreate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类目编号" align="center" prop="categoryType" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -136,14 +90,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['merchant:commodity:edit']"
+            v-hasPermi="['merchant:picture:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['merchant:commodity:remove']"
+            v-hasPermi="['merchant:picture:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -157,22 +111,10 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改商品对话框 -->
+    <!-- 添加或修改轮播图对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="商品名称" prop="productName">
-          <el-input v-model="form.productName" placeholder="请输入商品名称" />
-        </el-form-item>
-        <el-form-item label="单价" prop="productPrice">
-          <el-input v-model="form.productPrice" placeholder="请输入单价" />
-        </el-form-item>
-        <el-form-item label="库存" prop="productStock">
-          <el-input v-model="form.productStock" placeholder="请输入库存" />
-        </el-form-item>
-        <el-form-item label="描述" prop="productDescription">
-          <el-input v-model="form.productDescription" placeholder="请输入描述" />
-        </el-form-item>
-        <el-form-item label="小图" prop="productIcon">
+        <el-form-item label="小图" prop="picUrl">
           <el-upload
             :action=uploadFileUrl
             class="avatar-uploader"
@@ -187,24 +129,16 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item label="商品状态">
-          <el-radio-group v-model="form.productStatus">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
-          </el-radio-group>
+        <el-form-item label="图片描述" prop="picMessage">
+          <el-input v-model="form.picMessage" placeholder="请输入图片描述" />
         </el-form-item>
-        <el-form-item label="类目编号" prop="categoryType">
-          <el-select v-model="form.categoryType" placeholder="请选择类目编号">
-            <el-option
-              v-for="item in categoryList"
-              :key="item.categoryType"
-              :label="item.categoryName"
-              :value="item.categoryType">
-            </el-option>
-          </el-select>
+        <el-form-item label="创建时间" prop="picCreate">
+          <el-date-picker clearable size="small"
+            v-model="form.picCreate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="选择创建时间">
+          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -216,24 +150,19 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, exportInfo, changeProductStatus } from "@/api/merchant/commodity";
-import { listCategory } from "@/api/merchant/category";
+import { listMerchant, getMerchant, delMerchant, addMerchant, updateMerchant, exportMerchant } from "@/api/merchant/picture";
 import { getToken } from "@/utils/auth";
 export default {
-  name: "Commodity",
+  name: "Picture",
   components: {
   },
   data() {
     return {
-      fileSize:4,
       uploadFileUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken(),
       },
-      fileList: [],
-      dialogVisible: false,
       dialogImageUrl: '',
-      disabled: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -246,10 +175,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 商品表格数据
-      infoList: [],
-      // 类别数据
-      categoryList:[],
+      // 轮播图表格数据
+      merchantList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -258,63 +185,35 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        productName: null,
-        productPrice: null,
-        productStock: null,
-        productIcon: null,
-        productStatus: null,
-        categoryType: null
+        picUrl: null,
+        picMessage: null,
+        picCreate: null
       },
-      // 状态数据字典
-      statusOptions: [],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        productName: [
-          { required: true, message: "商品名称不能为空", trigger: "blur" }
-        ],
-        productPrice: [
-          { required: true, message: "单价不能为空", trigger: "blur" }
-        ],
-        productStock: [
-          { required: true, message: "库存不能为空", trigger: "blur" }
-        ],
-        categoryType: [
-          { required: true, message: "类目编号不能为空", trigger: "change" }
-        ],
-        dialogImageUrl: [
+        picUrl: [
           { required: true, message: "必须要选择一张图片", trigger: "blur" }
         ],
-        createTime: [
+        picMessage: [
+          { required: true, message: "输入图片描述信息", trigger: "blur" }
+        ],
+        picCreate: [
           { required: true, message: "创建时间不能为空", trigger: "blur" }
         ],
-        updateTime: [
-          { required: true, message: "修改时间不能为空", trigger: "blur" }
-        ]
       }
     };
   },
   created() {
     this.getList();
-    this.getCategory();
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
   },
   methods: {
-    /** 查询类别 */
-    getCategory(){
-      listCategory().then(response => {
-        this.categoryList = response.rows;
-        console.log(this.categoryList)
-      });
-    },
-    /** 查询商品列表 */
+    /** 查询轮播图列表 */
     getList() {
       this.loading = true;
-      listInfo(this.queryParams).then(response => {
-        this.infoList = response.rows;
+      listMerchant(this.queryParams).then(response => {
+        this.merchantList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -327,16 +226,9 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        productId: null,
-        productName: null,
-        productPrice: null,
-        productStock: null,
-        productDescription: null,
-        productIcon: null,
-        productStatus: "0",
-        categoryType: null,
-        createTime: null,
-        updateTime: null,
+        picUrl: null,
+        picMessage: null,
+        picCreate: null,
         dialogImageUrl: null
       };
       this.resetForm("form");
@@ -353,7 +245,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.productId)
+      this.ids = selection.map(item => item.picId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -361,37 +253,35 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加商品";
+      this.title = "添加轮播图";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const productId = row.productId || this.ids
-      getInfo(productId).then(response => {
+      const picId = row.picId || this.ids
+      getMerchant(picId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改商品";
-        this.dialogImageUrl=response.data.productIcon
+        this.title = "修改轮播图";
+        this.dialogImageUrl=response.data.picUrl
       });
     },
     /** 提交按钮 */
     submitForm() {
-      this.form.productIcon=this.dialogImageUrl;
+      this.form.picUrl=this.dialogImageUrl;
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.productId != null) {
-            updateInfo(this.form).then(response => {
+          if (this.form.picId != null) {
+            updateMerchant(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
-              this.getCategory();
             });
           } else {
-            addInfo(this.form).then(response => {
+            addMerchant(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
               this.getList();
-              this.getCategory();
             });
           }
         }
@@ -399,13 +289,13 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const productIds = row.productId || this.ids;
-      this.$confirm('是否确认删除商品编号为"' + productIds + '"的数据项?', "警告", {
+      const picIds = row.picId || this.ids;
+      this.$confirm('是否确认删除轮播图编号为"' + picIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return delInfo(productIds);
+          return delMerchant(picIds);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -414,39 +304,15 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有商品数据项?', "警告", {
+      this.$confirm('是否确认导出所有轮播图数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return exportInfo(queryParams);
+          return exportMerchant(queryParams);
         }).then(response => {
           this.download(response.msg);
         })
-    },
-    // 商品状态修改
-    handleStatusChange(row) {
-      let text = row.productStatus === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.productName + '"类目吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return changeProductStatus(row.productId, row.productStatus);
-      }).then(() => {
-        this.msgSuccess(text + "成功");
-      }).catch(function() {
-        row.status = row.status === "0" ? "1" : "0";
-      });
-    },
-    changeUpload (file) {
-      const reader = new FileReader()
-      this.form.productIcon=file.raw;
-      console.log("file",file.raw)
-      reader.readAsDataURL(file.raw)
-      reader.onload = () => {
-        this.dialogImageUrl = reader.result
-      }
     },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
@@ -475,6 +341,7 @@ export default {
       this.dialogImageUrl=res.url;
       this.$emit("input", res.url);
     },
+
   }
 };
 </script>

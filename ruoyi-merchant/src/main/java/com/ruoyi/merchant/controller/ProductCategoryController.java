@@ -6,6 +6,8 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.merchant.domain.ProductInfo;
+import com.ruoyi.merchant.service.IProductInfoService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,8 @@ public class ProductCategoryController extends BaseController
     private IProductCategoryService productCategoryService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private IProductInfoService productInfoService;
     /**
      * 查询类目列表
      */
@@ -51,6 +55,22 @@ public class ProductCategoryController extends BaseController
         productCategory.setSellerId(loginUser.getUser().getUserId());
         List<ProductCategory> list = productCategoryService.selectProductCategoryList(productCategory);
         return getDataTable(list);
+    }
+    /**
+     * 微信查询类目列表
+     */
+    @GetMapping("/buyerList")
+    public List<ProductCategory> buyerList(ProductCategory productCategory)
+    {
+        List<ProductCategory> list = productCategoryService.selectProductCategoryList(productCategory);
+        list.stream().forEach(category -> {
+            Long categoryType = category.getCategoryType();
+            ProductInfo productInfo=new ProductInfo();
+            productInfo.setCategoryType(categoryType);
+            List<ProductInfo> lists = productInfoService.selectProductInfoList(productInfo);
+            category.setProductInfos(lists);
+        });
+        return list;
     }
 
     /**

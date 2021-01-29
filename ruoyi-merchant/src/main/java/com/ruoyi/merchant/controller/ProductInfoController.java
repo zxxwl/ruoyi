@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.ServerConfig;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.merchant.domain.ProductCategory;
 import com.ruoyi.merchant.domain.ProductInfo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,15 @@ public class ProductInfoController extends BaseController
         List<ProductInfo> list = productInfoService.selectProductInfoList(productInfo);
         return getDataTable(list);
     }
-
+    /**
+     * 微信查询商品列表
+     */
+    @GetMapping("/buyerList")
+    public List<ProductInfo> buyerList(ProductInfo productInfo)
+    {
+        List<ProductInfo> list = productInfoService.selectProductInfoList(productInfo);
+        return list;
+    }
     /**
      * 导出商品列表
      */

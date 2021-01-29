@@ -24,15 +24,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectProductInfoList" parameterType="ProductInfo" resultMap="ProductInfoResult">
         <include refid="selectProductInfoVo"/>
-        <where> seller_id=#{sellerId}
+        <where>
             <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
             <if test="productPrice != null "> and product_price = #{productPrice}</if>
+            <if test="sellerId != null"> and seller_id = #{sellerId} </if>
             <if test="productStock != null "> and product_stock = #{productStock}</if>
             <if test="productDescription != null  and productDescription != ''"> and product_description = #{productDescription}</if>
             <if test="productIcon != null  and productIcon != ''"> and product_icon = #{productIcon}</if>
             <if test="productStatus != null  and productStatus != ''"> and product_status = #{productStatus}</if>
             <if test="categoryType != null "> and category_type = #{categoryType}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectProductInfoById" parameterType="String" resultMap="ProductInfoResult">

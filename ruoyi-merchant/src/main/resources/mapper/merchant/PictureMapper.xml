@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.merchant.mapper.PictureMapper">
+
+    <resultMap type="Picture" id="PictureResult">
+        <result property="picId"    column="pic_id"    />
+        <result property="picUrl"    column="pic_url"    />
+        <result property="picMessage"    column="pic_message"    />
+        <result property="picCreate"    column="pic_create"    />
+        <result property="sellerId"    column="seller_id"    />
+    </resultMap>
+
+    <sql id="selectPictureVo">
+        select pic_id, pic_url, pic_message, pic_create, seller_id from picture
+    </sql>
+
+    <select id="selectPictureList" parameterType="Picture" resultMap="PictureResult">
+        <include refid="selectPictureVo"/>
+        <where>
+            <if test="picMessage != null  and picMessage != ''"> and pic_message = #{picMessage}</if>
+            <if test="picCreate != null "> and pic_create = #{picCreate}</if>
+            <if test="sellerId != null "> and seller_id = #{sellerId}</if>
+        </where>
+    </select>
+
+    <select id="selectPictureById" parameterType="Long" resultMap="PictureResult">
+        <include refid="selectPictureVo"/>
+        where pic_id = #{picId}
+    </select>
+
+    <insert id="insertPicture" parameterType="Picture" useGeneratedKeys="true" keyProperty="picId">
+        insert into picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="picUrl != null and picUrl != ''">pic_url,</if>
+            <if test="picMessage != null and picMessage != ''">pic_message,</if>
+            <if test="picCreate != null">pic_create,</if>
+            <if test="sellerId != null">seller_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="picUrl != null and picUrl != ''">#{picUrl},</if>
+            <if test="picMessage != null and picMessage != ''">#{picMessage},</if>
+            <if test="picCreate != null">#{picCreate},</if>
+            <if test="sellerId != null">#{sellerId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePicture" parameterType="Picture">
+        update picture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="picUrl != null and picUrl != ''">pic_url = #{picUrl},</if>
+            <if test="picMessage != null and picMessage != ''">pic_message = #{picMessage},</if>
+            <if test="picCreate != null">pic_create = #{picCreate},</if>
+            <if test="sellerId != null">seller_id = #{sellerId},</if>
+        </trim>
+        where pic_id = #{picId}
+    </update>
+
+    <delete id="deletePictureById" parameterType="Long">
+        delete from picture where pic_id = #{picId}
+    </delete>
+
+    <delete id="deletePictureByIds" parameterType="String">
+        delete from picture where pic_id in
+        <foreach item="picId" collection="array" open="(" separator="," close=")">
+            #{picId}
+        </foreach>
+    </delete>
+</mapper>

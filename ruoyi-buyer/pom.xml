@@ -7,18 +7,21 @@
         <groupId>com.ruoyi</groupId>
         <version>3.3.0</version>
     </parent>
-    <artifactId>ruoyi-merchant</artifactId>
-    <description>商家管理模块</description>
-
+    <artifactId>ruoyi-buyer</artifactId>
+    <description>点餐用户信息</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
-
     <dependencies>
-        <!-- 核心模块-->
         <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-framework</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

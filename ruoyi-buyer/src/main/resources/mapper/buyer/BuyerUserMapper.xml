@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.buyer.mapper.BuyerUserMapper">
+
+    <resultMap type="BuyerUser" id="BuyerUserResult">
+        <result property="id"    column="id"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="phone"    column="phone"    />
+        <result property="openid"    column="openid"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="city"    column="city"    />
+        <result property="gender"    column="gender"    />
+        <result property="sellerId"    column="seller_id"    />
+        <result property="province"    column="province"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBuyerUserVo">
+        select id, nick_name, phone, openid, city, gender,province, create_time, update_time from buyer_user
+    </sql>
+
+    <sql id="selectBuyerUser">
+        select count(openid) from buyer_user
+    </sql>
+
+    <select id="selectBuyerUserList" parameterType="BuyerUser" resultMap="BuyerUserResult">
+        <include refid="selectBuyerUserVo"/>
+        <where>
+            <if test="nick_name != null  and nick_name != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+        </where>
+    </select>
+
+    <select id="selectBuyerUserById" parameterType="Long" resultMap="BuyerUserResult">
+        <include refid="selectBuyerUserVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectBuyerUserByOpenId" resultType="java.lang.Integer">
+        <include refid="selectBuyerUser"/>
+        where openid=#{openid}
+    </select>
+
+    <insert id="insertBuyerUser" parameterType="BuyerUser" useGeneratedKeys="true" keyProperty="id">
+        insert into buyer_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="openid != null and openid != ''">openid,</if>
+            <if test="city != null">city,</if>
+            <if test="gender != null">gender,</if>
+            <if test="province != null">province,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">#{nickName},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="openid != null and openid != ''">#{openid},</if>
+            <if test="city != null">city,</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="province != null">#{province},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBuyerUser" parameterType="BuyerUser">
+        update buyer_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="openid != null and openid != ''">openid = #{openid},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateBuyerByOpenid" parameterType="BuyerUser">
+        update buyer_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="openid != null and openid != ''">openid = #{openid},</if>
+            <if test="avatarUrl != null and avatarUrl != ''">avatar_url = #{avatarUrl},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where openid=#{openid}
+    </update>
+
+    <delete id="deleteBuyerUserById" parameterType="Long">
+        delete from buyer_user where id = #{id}
+    </delete>
+
+    <delete id="deleteBuyerUserByIds" parameterType="String">
+        delete from buyer_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
