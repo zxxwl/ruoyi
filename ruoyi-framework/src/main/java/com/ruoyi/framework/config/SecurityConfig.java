@@ -101,6 +101,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                         "/login",
                         "/buyer/user",
                         "/buyer/order",
+                        "/event/msg",
+                        "/event/obj",
                         "/buyer/comment",
                         "/buyer/comment/wxList",
                         "/buyer/comment/getWxInfo",

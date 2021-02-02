@@ -6,11 +6,14 @@ import com.ruoyi.buyer.domain.Comment;
 import com.ruoyi.buyer.domain.OrderMaster;
 import com.ruoyi.buyer.service.IBuyerUserService;
 import com.ruoyi.buyer.service.IOrderMasterService;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.OrderStatusEnum;
 import com.ruoyi.common.enums.ResultEnum;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +49,9 @@ public class CommentController extends BaseController
 
     @Autowired
     private IOrderMasterService orderMasterService;
+
+    @Autowired
+    private TokenService tokenService;
     /**
      * 查询评论信息列表
      */
@@ -54,6 +60,8 @@ public class CommentController extends BaseController
     public TableDataInfo list(Comment comment)
     {
         startPage();
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        comment.setSellerId(loginUser.getUser().getUserId());
         List<Comment> list = commentService.selectCommentList(comment);
         return getDataTable(list);
     }

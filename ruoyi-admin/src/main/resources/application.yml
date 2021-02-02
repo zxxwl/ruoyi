@@ -14,6 +14,8 @@ ruoyi:
   addressEnabled: false
   # 验证码类型 math 数组计算 char 字符验证
   captchaType: math
+  # 是否开启验证码
+  captchaEnabled: false
 
 # 开发环境配置
 server:
@@ -119,3 +121,22 @@ xss:
   excludes: /system/notice/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*,/merchant/*
+
+
+wx:
+  miniapp:
+    configs:
+      - appid:
+        secret:
+  pay:
+    appId:
+    #证书路径
+    keyPath:
+    #商户id
+    mchId:
+    #商户秘钥
+    mchKey:
+    #通知地址
+    notify_url: http://www.example.com/wxpay/notify
+    subAppId: ''
+    subMchId: ''
