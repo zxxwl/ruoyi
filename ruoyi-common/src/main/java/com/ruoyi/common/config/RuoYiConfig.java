@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 读取项目相关配置
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -26,6 +26,9 @@ public class RuoYiConfig
 
     /** 上传路径 */
     private static String profile;
+
+    /** 主机路径 */
+    private static String photoFile;
 
     /** 获取地址开关 */
     private static boolean addressEnabled;
@@ -68,6 +71,14 @@ public class RuoYiConfig
     public void setDemoEnabled(boolean demoEnabled)
     {
         this.demoEnabled = demoEnabled;
+    }
+
+    public static String getPhotoFile() {
+        return photoFile;
+    }
+
+    public void setPhotoFile(String photoFile) {
+        RuoYiConfig.photoFile = photoFile;
     }
 
     public static String getProfile()

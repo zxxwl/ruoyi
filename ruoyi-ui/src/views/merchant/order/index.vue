@@ -123,7 +123,7 @@
     />
 
     <!-- 添加或修改订单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="买家名字" prop="buyerName">
           <el-input v-model="form.buyerName" placeholder="请输入买家名字" />
@@ -158,24 +158,24 @@
         <el-table :data="orderDetailList" :row-class-name="rowOrderDetailIndex" @selection-change="handleOrderDetailSelectionChange" ref="orderDetail">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="商品名称" prop="productName">
+          <el-table-column label="商品名称" align="center" prop="productName">
             <template slot-scope="scope">
               <el-input v-model="scope.row.productName" placeholder="请输入商品名称" />
             </template>
           </el-table-column>
-          <el-table-column label="价格" prop="productPrice">
+          <el-table-column label="价格" width="100" align="center" prop="productPrice">
             <template slot-scope="scope">
               <el-input v-model="scope.row.productPrice" placeholder="请输入当前价格,单位分" />
             </template>
           </el-table-column>
-          <el-table-column label="数量" prop="productQuantity">
+          <el-table-column label="数量" width="100" align="center" prop="productQuantity">
             <template slot-scope="scope">
               <el-input v-model="scope.row.productQuantity" placeholder="请输入数量" />
             </template>
           </el-table-column>
-          <el-table-column label="小图" prop="productIcon">
+          <el-table-column label="小图" align="center" prop="productIcon">
             <template slot-scope="scope">
-              <img :src="scope.row.productIcon" width="100" height="100">
+              <img :src="scope.row.productIcon" width="140" height="120">
             </template>
           </el-table-column>
         </el-table>
