@@ -87,8 +87,8 @@ export default {
   mounted () {
     // WebSocket
     if ('WebSocket' in window) {
-      console.log("",this.$store.getters.name())
-      this.websocket = new WebSocket('ws://localhost:8080/websocket/' + "admin")
+      // this.websocket = new WebSocket('ws://localhost:8080/websocket/' + "admin")
+      this.websocket = new WebSocket('ws://localhost:8080/prod-api/websocket/' + "admin")
       this.initWebSocket()
     } else {
       alert('当前浏览器 Not support websocket')
