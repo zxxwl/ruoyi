@@ -100,7 +100,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers(
                         "/login",
                         "/buyer/user",
+                        "/test/order/a",
                         "/buyer/order",
+                        "/websocket/*",
                         "/event/msg",
                         "/event/obj",
                         "/buyer/comment",

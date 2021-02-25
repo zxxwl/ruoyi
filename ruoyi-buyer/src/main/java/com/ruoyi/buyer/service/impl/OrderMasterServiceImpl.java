@@ -1,9 +1,10 @@
 package com.ruoyi.buyer.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.buyer.socket.WebSocket;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import com.ruoyi.common.utils.StringUtils;
@@ -26,7 +27,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService
     private OrderMasterMapper orderMasterMapper;
 
     @Autowired
-    ApplicationEventPublisher eventPublisher;
+    private WebSocket webSocket;
     /**
      * 查询订单
      *
@@ -64,7 +65,7 @@ public class OrderMasterServiceImpl implements IOrderMasterService
         orderMaster.setCreateTime(DateUtils.getNowDate());
         int rows = orderMasterMapper.insertOrderMaster(orderMaster);
         insertOrderDetail(orderMaster);
-        eventPublisher.publishEvent(orderMaster);
+        webSocket.sendOneMessage("admin",orderMaster.toString());
         return rows;
     }
 

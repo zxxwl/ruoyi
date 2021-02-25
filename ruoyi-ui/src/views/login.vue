@@ -65,8 +65,8 @@ export default {
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "周星星区",
+        password: "123456",
         rememberMe: false,
         code: "",
         uuid: ""
