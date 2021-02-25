@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.buyer.domain.OrderDetail;
-import com.ruoyi.buyer.listener.OrderEvent;
 import com.ruoyi.buyer.sdk.*;
 import com.ruoyi.buyer.service.IBuyerUserService;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -174,8 +172,6 @@ public class OrderMasterController extends BaseController
 //            String packageSign = WXPayUtil.generateSignature(packageParams, WxProgramPayConfig.getMchKey());
 //            packageParams.put("paySign", packageSign);
             orderMasterService.insertOrderMaster(orderMaster);
-            //发布消息
-            eventPublisher.publishEvent(new OrderEvent(this, orderMaster));
             return AjaxResult.success(resultMap);
         }
         return AjaxResult.error("请先授权登录!");
