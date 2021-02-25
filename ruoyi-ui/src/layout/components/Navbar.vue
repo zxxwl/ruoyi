@@ -87,8 +87,7 @@ export default {
   mounted () {
     // WebSocket
     if ('WebSocket' in window) {
-      // this.websocket = new WebSocket('ws://localhost:8080/websocket/' + "admin")
-      this.websocket = new WebSocket('ws://localhost:8080/prod-api/websocket/' + "admin")
+      this.websocket = new WebSocket('wss://www.zhoutt.co/wss/websocket/' + "admin")
       this.initWebSocket()
     } else {
       alert('当前浏览器 Not support websocket')
